@@ -1,13 +1,6 @@
 package ru.clevertec.employeeservice.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,6 +33,13 @@ public class Salary implements BaseEntity<Long> {
     @Column(nullable = false)
     private boolean currentSalary;
 
-    @OneToMany(mappedBy = "salary", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
+    @OneToMany(
+            mappedBy = "salary", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true
+    )
     private List<Payroll> payrolls = new ArrayList<>();
 }
