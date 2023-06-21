@@ -67,6 +67,9 @@ public class Employee implements BaseEntity<Long> {
     private Set<Position> positions = new HashSet<>();
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Salary> salaries = new HashSet<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Bonus> bonuses = new HashSet<>();
 }
 
