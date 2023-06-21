@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employee-service-db
+    username: user
+    password: secret-123
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        format_sql: true
+  liquibase:
+    enabled: true
