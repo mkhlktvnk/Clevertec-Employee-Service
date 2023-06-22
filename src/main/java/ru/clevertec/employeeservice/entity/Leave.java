@@ -6,32 +6,33 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Date;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "positions")
-public class Position {
+@Table(name = "leaves")
+public class Leave implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @Column(nullable = false)
+    private Date startDate;
 
     @Column(nullable = false)
-    private String description;
+    private Date endDate;
 
-    @ManyToMany(mappedBy = "positions", fetch = FetchType.LAZY)
-    private Set<Employee> employees = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 }
