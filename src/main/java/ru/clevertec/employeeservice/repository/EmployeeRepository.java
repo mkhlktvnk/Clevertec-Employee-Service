@@ -6,5 +6,8 @@ import org.springframework.stereotype.Repository;
 import ru.clevertec.employeeservice.entity.Employee;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Long, Employee>, JpaSpecificationExecutor<Employee> {
+public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
+    boolean existsByEmail(String email);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }

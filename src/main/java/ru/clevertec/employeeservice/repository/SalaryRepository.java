@@ -1,5 +1,6 @@
 package ru.clevertec.employeeservice.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.clevertec.employeeservice.entity.Salary;
@@ -9,9 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface SalaryRepository extends JpaRepository<Salary, Long> {
-    List<Salary> findAllByEmployeeId(Long employeeId);
+    List<Salary> findAllByEmployeeId(Long employeeId, Pageable pageable);
 
-    Optional<Salary> findByEmployeeId(Long employeeId);
+    Optional<Salary> findByEmployeeIdAndId(Long employeeId, Long salaryId);
 
-    Optional<Salary> findByEmployeeIdAndId(Long employeeId, Long id);
+    boolean existsByEmployeeIdAndId(Long employeeId, Long salaryId);
 }
