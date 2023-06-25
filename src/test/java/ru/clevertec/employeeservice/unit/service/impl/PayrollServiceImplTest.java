@@ -59,7 +59,7 @@ class PayrollServiceImplTest {
             doReturn(expectedPayrolls).when(payrollRepository).findAllByEmployeeAndSalaryIds(EMPLOYEE_ID, SALARY_ID, pageable);
             doReturn(true).when(salaryService).existsByEmployeeAndSalaryIds(EMPLOYEE_ID, SALARY_ID);
 
-            List<Payroll> actualPayrolls = payrollService.findAllOfSalaryWithPageable(EMPLOYEE_ID, SALARY_ID, PAYROLL_ID, pageable);
+            List<Payroll> actualPayrolls = payrollService.findAllOfEmployeeSalaryWithPageable(EMPLOYEE_ID, SALARY_ID, pageable);
 
             assertThat(actualPayrolls).isEqualTo(expectedPayrolls);
             verify(payrollRepository).findAllByEmployeeAndSalaryIds(EMPLOYEE_ID, SALARY_ID, pageable);
@@ -70,7 +70,7 @@ class PayrollServiceImplTest {
             Pageable pageable = PageRequest.of(0, 3);
             doReturn(false).when(salaryService).existsByEmployeeAndSalaryIds(EMPLOYEE_ID, SALARY_ID);
 
-            assertThatThrownBy(() -> payrollService.findAllOfSalaryWithPageable(EMPLOYEE_ID, SALARY_ID, PAYROLL_ID, pageable))
+            assertThatThrownBy(() -> payrollService.findAllOfEmployeeSalaryWithPageable(EMPLOYEE_ID, SALARY_ID, pageable))
                     .isInstanceOf(ResourceNotFoundException.class);
         }
 
