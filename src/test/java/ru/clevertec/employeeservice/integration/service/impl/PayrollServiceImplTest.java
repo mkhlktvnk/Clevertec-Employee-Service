@@ -47,7 +47,7 @@ class PayrollServiceImplTest extends BaseIntegrationTest {
             int expectedSize = 3;
             Pageable pageable = PageRequest.of(0, 3);
             List<Payroll> actualPayrolls = payrollService
-                    .findAllOfSalaryWithPageable(CORRECT_EMPLOYEE_ID, CORRECT_SALARY_ID, CORRECT_PAYROLL_ID, pageable);
+                    .findAllOfEmployeeSalaryWithPageable(CORRECT_EMPLOYEE_ID, CORRECT_SALARY_ID, pageable);
 
             assertThat(actualPayrolls.size()).isEqualTo(expectedSize);
         }

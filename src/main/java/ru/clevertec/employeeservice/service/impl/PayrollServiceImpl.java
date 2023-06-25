@@ -1,11 +1,13 @@
 package ru.clevertec.employeeservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.employeeservice.entity.Payroll;
 import ru.clevertec.employeeservice.entity.Salary;
+import ru.clevertec.employeeservice.mapper.PayrollMapper;
 import ru.clevertec.employeeservice.message.Messages;
 import ru.clevertec.employeeservice.message.code.PayrollMessageCode;
 import ru.clevertec.employeeservice.message.code.SalaryMessageCode;
@@ -22,10 +24,11 @@ import java.util.List;
 public class PayrollServiceImpl implements PayrollService {
     private final PayrollRepository payrollRepository;
     private final SalaryService salaryService;
+    private final PayrollMapper payrollMapper = Mappers.getMapper(PayrollMapper.class);
     private final Messages messages;
 
     @Override
-    public List<Payroll> findAllOfSalaryWithPageable(Long employeeId, Long salaryId, Long payrollId, Pageable pageable) {
+    public List<Payroll> findAllOfEmployeeSalaryWithPageable(Long employeeId, Long salaryId, Pageable pageable) {
         if (!salaryService.existsByEmployeeAndSalaryIds(employeeId, salaryId)) {
             throw new ResourceNotFoundException(
                     messages.get(SalaryMessageCode.NOT_FOUND_BY_EMPLOYEE_AND_SALARY_IDS, employeeId, salaryId)
@@ -61,6 +64,7 @@ public class PayrollServiceImpl implements PayrollService {
                         messages.get(PayrollMessageCode.NOT_FOUND_BY_EMPLOYEE_SALARY_AND_PAYROLL_IDS,
                                 employeeId, salaryId, payrollId)
                 ));
+        payrollMapper.copyNotNullFields(payrollToUpdate, updatedPayroll);
         payrollRepository.save(payrollToUpdate);
     }
 

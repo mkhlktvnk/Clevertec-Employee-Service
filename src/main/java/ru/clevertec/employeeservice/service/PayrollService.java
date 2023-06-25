@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PayrollService {
-    List<Payroll> findAllOfSalaryWithPageable(Long employeeId, Long salaryId, Long payrollId, Pageable pageable);
+    List<Payroll> findAllOfEmployeeSalaryWithPageable(Long employeeId, Long salaryId, Pageable pageable);
 
     Payroll findByEmployeeSalaryAndPayrollIds(Long employeeId, Long salaryId, Long payrollId);
 
