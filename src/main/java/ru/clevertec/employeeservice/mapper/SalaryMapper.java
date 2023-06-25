@@ -5,6 +5,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import ru.clevertec.employeeservice.entity.Salary;
+import ru.clevertec.employeeservice.web.dto.SalaryDto;
+
+import java.util.List;
 
 @Mapper
 public interface SalaryMapper {
@@ -14,4 +17,10 @@ public interface SalaryMapper {
             @Mapping(target = "employee", ignore = true)
     })
     void copyAllFields(@MappingTarget Salary target, Salary source);
+
+    SalaryDto toDto(Salary salary);
+
+    List<SalaryDto> toDto(List<Salary> salaries);
+
+    Salary toEntity(SalaryDto salaryDto);
 }
