@@ -8,6 +8,8 @@ services:
       POSTGRES_PASSWORD: "secret"
     ports:
       - "5432:5432"
+    networks:
+      - backend
 
   postgres_keycloak:
     hostname: postgres_keycloak
@@ -20,6 +22,8 @@ services:
       - "5433:5433"
     depends_on:
       - postgres_employee
+    networks:
+      - backend
 
   keycloak:
     image: jboss/keycloak
@@ -32,21 +36,15 @@ services:
       - DB_USER=admin
       - DB_PASSWORD=admin
     ports:
-      - "8180:8080"
+      - "8080:8080"
     depends_on:
       - postgres_keycloak
-
-  employee_service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    depends_on:
-      - keycloak
-      - postgres_keycloak
-      - postgres_employee
+    networks:
+      - backend
 
 volumes:
   postgres_employee_data:
   postgres_keycloak_data:
+
+networks:
+  backend:
