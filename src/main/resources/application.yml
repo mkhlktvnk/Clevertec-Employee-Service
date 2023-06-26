@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/employee-service-db
     username: user
-    password: secret-123
+    password: secret
   jpa:
     hibernate:
       ddl-auto: none
@@ -13,3 +13,17 @@ spring:
         format_sql: true
   liquibase:
     enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/auth/realms/employee-service
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+jwt:
+  auth:
+    converter:
+      resource-id: employee-service
+      principle-attribute: preferred_username
+server:
+  port: 8081
