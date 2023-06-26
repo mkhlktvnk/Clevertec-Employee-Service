@@ -1,24 +1,30 @@
 package ru.clevertec.employeeservice.integration.web.controller;
 
+import com.c4_soft.springaddons.security.oauth2.test.annotations.WithMockJwtAuth;
+import com.c4_soft.springaddons.security.oauth2.test.annotations.keycloak.WithMockKeycloakAuth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.clevertec.employeeservice.integration.BaseIntegrationTest;
 import ru.clevertec.employeeservice.web.dto.BonusDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 @AutoConfigureMockMvc
+@WithMockKeycloakAuth(authorities = "ROLE_ADMIN")
 class BonusControllerTest extends BaseIntegrationTest {
 
     private static final Long CORRECT_EMPLOYEE_ID = 1L;
@@ -48,7 +54,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(CORRECT_EMPLOYEE_ID)
                     .toUriString();
 
-            mockMvc.perform(get(url))
+            mockMvc.perform(MockMvcRequestBuilders.get(url))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.length()").value(expectedLength));
@@ -63,7 +69,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(INCORRECT_EMPLOYEE_ID)
                     .toUriString();
 
-            mockMvc.perform(get(url))
+            mockMvc.perform(MockMvcRequestBuilders.get(url))
                     .andExpect(status().isNotFound())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.message").isNotEmpty())
@@ -83,7 +89,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(CORRECT_EMPLOYEE_ID, CORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(get(url))
+            mockMvc.perform(MockMvcRequestBuilders.get(url))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(CORRECT_BONUS_ID))
                     .andExpect(jsonPath("$.amount").value(bonusDto.getAmount()))
@@ -98,7 +104,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(INCORRECT_EMPLOYEE_ID, CORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(get(url))
+            mockMvc.perform(MockMvcRequestBuilders.get(url))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.message").isNotEmpty())
                     .andExpect(jsonPath("$.errorUrl").isNotEmpty())
@@ -112,7 +118,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(CORRECT_EMPLOYEE_ID, INCORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(get(url))
+            mockMvc.perform(MockMvcRequestBuilders.get(url))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.message").isNotEmpty())
                     .andExpect(jsonPath("$.errorUrl").isNotEmpty())
@@ -135,7 +141,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(CORRECT_EMPLOYEE_ID)
                     .toUriString();
 
-            mockMvc.perform(post(url)
+            mockMvc.perform(MockMvcRequestBuilders.post(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(bonusDto)))
                     .andExpect(status().isCreated())
@@ -155,7 +161,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(INCORRECT_EMPLOYEE_ID)
                     .toUriString();
 
-            mockMvc.perform(post(url)
+            mockMvc.perform(MockMvcRequestBuilders.post(url)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(bonusDto)))
                     .andExpect(status().isNotFound())
@@ -182,7 +188,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(CORRECT_EMPLOYEE_ID, CORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(put(url)
+            mockMvc.perform(MockMvcRequestBuilders.put(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(bonusDto)))
                     .andExpect(status().isNoContent());
@@ -200,7 +206,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(INCORRECT_EMPLOYEE_ID, CORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(put(url)
+            mockMvc.perform(MockMvcRequestBuilders.put(url)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(bonusDto)))
                     .andExpect(status().isNotFound())
@@ -221,7 +227,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(INCORRECT_EMPLOYEE_ID, CORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(put(url)
+            mockMvc.perform(MockMvcRequestBuilders.put(url)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(bonusDto)))
                     .andExpect(status().isNotFound())
@@ -242,7 +248,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(CORRECT_EMPLOYEE_ID, CORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(delete(url))
+            mockMvc.perform(MockMvcRequestBuilders.delete(url))
                     .andExpect(status().isNoContent());
         }
 
@@ -253,7 +259,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(INCORRECT_EMPLOYEE_ID, CORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(delete(url))
+            mockMvc.perform(MockMvcRequestBuilders.delete(url))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.message").isNotEmpty())
                     .andExpect(jsonPath("$.errorUrl").isNotEmpty())
@@ -267,7 +273,7 @@ class BonusControllerTest extends BaseIntegrationTest {
                     .buildAndExpand(CORRECT_EMPLOYEE_ID, INCORRECT_BONUS_ID)
                     .toUriString();
 
-            mockMvc.perform(delete(url))
+            mockMvc.perform(MockMvcRequestBuilders.delete(url))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.message").isNotEmpty())
                     .andExpect(jsonPath("$.errorUrl").isNotEmpty())

@@ -1,5 +1,6 @@
 package ru.clevertec.employeeservice.integration.web.controller;
 
+import com.c4_soft.springaddons.security.oauth2.test.annotations.keycloak.WithMockKeycloakAuth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 @AutoConfigureMockMvc
+@WithMockKeycloakAuth(authorities = "ROLE_ADMIN")
 class EmployeeControllerTest extends BaseIntegrationTest {
 
     private static final Long CORRECT_EMPLOYEE_ID = 1L;
