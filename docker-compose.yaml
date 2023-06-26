@@ -1,10 +1,50 @@
 services:
-  postgres:
-    hostname: postgres
+  postgres_employee:
+    hostname: postgres_employee
     image: postgres:13.3
     environment:
       POSTGRES_DB: "employee-service-db"
       POSTGRES_USER: "user"
-      POSTGRES_PASSWORD: "secret-123"
+      POSTGRES_PASSWORD: "secret"
     ports:
       - "5432:5432"
+    networks:
+      - backend
+
+  postgres_keycloak:
+    hostname: postgres_keycloak
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "keycloak_db"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    ports:
+      - "5433:5433"
+    depends_on:
+      - postgres_employee
+    networks:
+      - backend
+
+  keycloak:
+    image: jboss/keycloak
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=postgres
+      - DB_ADDR=postgres_keycloak
+      - DB_DATABASE=keycloak_db
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_keycloak
+    networks:
+      - backend
+
+volumes:
+  postgres_employee_data:
+  postgres_keycloak_data:
+
+networks:
+  backend:
