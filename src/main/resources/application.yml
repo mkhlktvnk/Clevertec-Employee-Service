@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/employee-service-db
+    url: jdbc:postgresql://postgres_employee:5432/employee-service-db
     username: user
     password: secret
   jpa:
@@ -17,9 +17,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/auth/realms/employee-service
+          issuer-uri: http://keycloak:8080/auth/realms/employee-service
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
-
 jwt:
   auth:
     converter:
